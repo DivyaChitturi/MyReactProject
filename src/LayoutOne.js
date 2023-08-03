@@ -1,19 +1,32 @@
 import {View} from 'react-native';
-import LayoutTwo from './LayoutTwo';
-import LayoutThree from './LayoutThree';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const LayoutOne = () => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#00ffff',
-        margin: 50,
-        height: 100,
-        width: 100,
-        alignSelf: 'flex-start',
-      }}></View>
-  );
-};
+class LayoutOne extends React.PureComponent {
+  render() {
+    const {bgColor} = this.props;
+
+    console.log('hey this is level one render');
+
+    return (
+      <View
+        style={{
+          width: 120,
+          height: 180,
+          backgroundColor: bgColor,
+          margin: 5,
+          flexDirection: 'column',
+        }}></View>
+    );
+  }
+}
 
 export default LayoutOne;
+
+LayoutOne.propTypes = {
+  bgColor: PropTypes.string.isRequired,
+};
+
+LayoutOne.defaultProps = {
+  bgColor: 'yellow',
+};
