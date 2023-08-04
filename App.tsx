@@ -6,9 +6,15 @@
  */
 
 import React, {useState} from 'react';
-import type {PropsWithChildren, PropsWithRef} from 'react';
-import {ImageBackground, Text, View, TextInput, Button} from 'react-native';
-import Modal from 'react-native-modal';
+import {
+  ImageBackground,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -19,8 +25,7 @@ function App(): JSX.Element {
   const image = {
     uri: 'https://www.freecodecamp.org/news/content/images/2021/06/w-qjCHPZbeXCQ-unsplash.jpg',
   };
-  const HomeScreen = ({navigation}: any) => {
-    //console.log('Hi');
+  const HomeScreen = props => {
     return (
       <ImageBackground
         source={image}
@@ -28,13 +33,15 @@ function App(): JSX.Element {
           flex: 1,
         }}>
         <View>
-          <Text>User Name:</Text>
+          <Text style={{margin: 5}}>User Name:</Text>
           <TextInput
             value={userName}
-            onChangeText={text => setUserName(text)}
+            onChangeText={text => {
+              setUserName(text);
+            }}
             style={{backgroundColor: 'white', height: 44, margin: 15}}
           />
-          <Text>Password:</Text>
+          <Text style={{margin: 5}}>Password:</Text>
           <TextInput
             placeholder="Enter password"
             value={password}
@@ -43,13 +50,18 @@ function App(): JSX.Element {
           />
           <Button
             title="Submit"
-            // onPress={() => navigation.navigate('Details')}
             onPress={() => {
               /* 1. Navigate to the Details route with params */
-              navigation.navigate('Details', {
-                itemId: 86,
-                name: {userName},
+              props.navigation.navigate('Details', {
+                userName: userName,
               });
+            }}
+          />
+          <Button
+            title="Reset"
+            onPress={() => {
+              setUserName('');
+              setPassword('');
             }}
           />
         </View>
@@ -57,21 +69,23 @@ function App(): JSX.Element {
     );
   };
 
-  const DetailScreen = ({navigation}: any) => {
-    console.log({userName});
+  const DetailScreen = props => {
+    const {route} = props;
+    // Alert.alert('userName' + userName);
+    console.log(props);
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Hi {userName}</Text>
+        <Text>Hi {JSON.stringify(route.params.userName)}</Text>
         <Button
           title="Go to Home"
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => props.navigation.navigate('Home')}
         />
       </View>
     );
   };
 
   const Stack = createNativeStackNavigator();
-  //console.log(HomeScreen);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
