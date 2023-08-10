@@ -4,18 +4,36 @@
  *
  * @format
  */
-import Cars from './src/Cars';
-import CarDetails from './src/CarDetails';
+import LoginScreen from './src/Screens/LoginScreen';
+import UserDetails from './src/Screens/UserDetails';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 function App(): JSX.Element {
+  const isUserLoggedIn = false;
+
+  const authStack = () => {
+    return (
+      <Stack.Group>
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </Stack.Group>
+    );
+  };
+  const mainStack = () => {
+    return (
+      <Stack.Group>
+        <Stack.Screen name="UserDetails" component={UserDetails} />
+      </Stack.Group>
+    );
+  };
+  console.log(isUserLoggedIn);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="DisplayCars">
-        <Stack.Screen name="DisplayCars" component={Cars} />
-        <Stack.Screen name="DisplayCarDetails" component={CarDetails} />
+      <Stack.Navigator>
+        {isUserLoggedIn ? mainStack() : authStack()}
+        {/* <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="UserDetails" component={UserDetails} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
