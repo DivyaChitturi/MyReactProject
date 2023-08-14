@@ -1,6 +1,5 @@
 import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import {createLogger} from 'redux-logger';
-//import counterSlice from '../Features/cart/counterSlice';
 import counterSlice from './src/Features/counterSlice';
 import cartSlice from './src/Features/cartSlice';
 
