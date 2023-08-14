@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {createContext, useState, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import PersistantHelper from '../Helpers/PersistantHelper';
-
+import {UserContext} from '../Contexts/UserContext';
+import {EventRegister} from 'react-native-event-listeners';
 const Login = props => {
-  //console.log('Hi');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  //const {setIsUserLoggedIn} = useContext(UserContext);
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -42,9 +43,14 @@ const Login = props => {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          //   PersistantHelper.setValue('userName', email);
-          //   PersistantHelper.setValue('password', password);
+          //setIsUserLoggedIn(true);
+          PersistantHelper.setValue('userName', email);
+          PersistantHelper.setValue('password', password);
+          //PersistantHelper.setValue('isUserLoggedIn', true);
           //   props.navigation.navigate('UserDetails');
+          EventRegister.emit('userName', {email});
+          EventRegister.emit('password', {password});
+          EventRegister.emit('userLoggedIn', {email});
         }}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>

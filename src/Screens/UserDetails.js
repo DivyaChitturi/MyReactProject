@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+
 import {
   StyleSheet,
   Text,
@@ -7,39 +8,91 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import PersistantHelper from '../Helpers/PersistantHelper';
+import ApiHandler from '../Helpers/ApiHandler';
+import {EventRegister} from 'react-native-event-listeners';
 
 const UserDetails = () => {
   const [userName, setUserName] = useState('');
+  const [myListData, setMyListData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const loggedInUser = async () => {
-    userName = await PersistantHelper.getValue('userName');
+  const fetchListFromApi = () => {
+    console.log('fetchListFromApi');
+    setIsLoading(true);
 
-    if (userName) {
-      setUserName(userName);
-    }
+    ApiHandler.get('/todos')
+      .then(responsejson => {
+        setMyListData(responsejson);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        setIsLoading(false);
+      });
   };
-  useEffect(() => {
-    loggedInUser();
-  });
-  //   useEffect(async () => {
-  //     const userName = await PersistantHelper.getValue('userName');
 
-  //     if (userName) {
-  //       setUserName(userName);
-  //     }
-  //   }, []);
-  //     const keys = await PersistantHelper.getAllKeys();
-  //   const keyValueArray= await Promise.all(
-  //           keys .map(async key => {
-  //             const value = await EncryptedStorage.getItem(key);
-  //             return [key, value];
-  //           }),
-  //         );
+  useEffect(() => {
+    fetchListFromApi();
+  }, []);
+
+  const getUserName = async () => {
+    const username = await PersistantHelper.getValue('userName');
+    console.log('userDetails' + {username});
+    setUserName(username);
+  };
+
+  useEffect(() => {
+    getUserName();
+    fetchListFromApi();
+    // let event = EventRegister.addEventListener('userLoggedIn', data => {
+    //   setIsUserLoggedIn(data.username ? true : false);
+    // });
+
+    // return () => {
+    //   EventRegister.removeEventListener(event);
+    // };
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text>Welcome {userName}</Text>
+      <View style={styles.inputView}>
+        <Text>Welcome {userName}</Text>
+      </View>
+      <View style={{flex: 1}}>
+        <FlatList
+          //data={['a', 'b', 'c', 'd']}
+          refreshing={isLoading}
+          data={myListData}
+          onRefresh={() => {
+            console.log('myListData' + myListData);
+            fetchListFromApi();
+          }}
+          renderItem={({item, index}) => {
+            return (
+              <View
+                style={{
+                  height: 60,
+                  marginHorizontal: 10,
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 1,
+                }}>
+                <Text>{item.title}</Text>
+              </View>
+            );
+          }}
+        />
+      </View>
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => {
+          setUserName('');
+          PersistantHelper.setValue('userName', userName);
+          EventRegister.emit('userLoggedIn', false);
+        }}>
+        <Text style={styles.loginText}>LOG OUT</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -52,5 +105,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loginBtn: {
+    width: '80%',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    backgroundColor: '#FF1493',
+    flexDirection: 'flex-end',
   },
 });
