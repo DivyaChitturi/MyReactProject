@@ -12,6 +12,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {EventRegister} from 'react-native-event-listeners';
 import PersistantHelper from './src/Helpers/PersistantHelper';
 import {MyContextProvider} from './src/Contexts/UserContext';
+import {Provider} from 'react-redux';
+import store from './store';
+import ListScreen from './src/Screens/ListScreen';
+import CartScreen from './src/Screens/CartScreen';
 
 const Stack = createNativeStackNavigator();
 function App(): JSX.Element {
@@ -46,20 +50,28 @@ function App(): JSX.Element {
   const mainStack = () => {
     return (
       <Stack.Group>
-        <Stack.Screen name="UserDetails" component={UserDetails} />
+        {/* <Stack.Screen name="UserDetails" component={UserDetails} /> */}
+        <Stack.Screen
+          name="ListScreen"
+          component={ListScreen}
+          options={{title: 'List'}}
+        />
+        <Stack.Screen
+          name="CartScreen"
+          component={CartScreen}
+          options={{title: 'Cart'}}
+        />
       </Stack.Group>
     );
   };
   return (
-    // <MyContextProvider>
-    <NavigationContainer>
-      <Stack.Navigator>
-        {isUserLoggedIn ? mainStack() : authStack()}
-        {/* <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="UserDetails" component={UserDetails} /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
-    //   </MyContextProvider>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {isUserLoggedIn ? mainStack() : authStack()}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 
