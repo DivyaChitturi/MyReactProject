@@ -38,7 +38,9 @@ export const cartSlice = createSlice({
         state.cartItems.pop({item: itemToAdd, quantity: 1});
       }
     },
-    clearCart: state => {},
+    clearCart: state => {
+      state.cartItems = [];
+    },
   },
 });
 

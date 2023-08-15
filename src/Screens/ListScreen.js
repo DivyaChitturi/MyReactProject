@@ -101,18 +101,6 @@ const listScreen = props => {
                 }}>
                 <Text numberOfLines={2}>Add to cart</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  dispatch(cartActions.removeFromCart(item));
-                }}
-                style={{
-                  width: 70,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: 10,
-                }}>
-                <Text numberOfLines={2}>Remove From cart</Text>
-              </TouchableOpacity>
             </View>
           );
         }}
