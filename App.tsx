@@ -16,11 +16,15 @@ import {Provider} from 'react-redux';
 import store from './store';
 import ListScreen from './src/Screens/ListScreen';
 import CartScreen from './src/Screens/CartScreen';
+import {useDispatch, useSelector} from 'react-redux';
+import authSlice from './src/Features/authSlice';
 
 const Stack = createNativeStackNavigator();
 
 const Nav = () => {
-  const {isUserLoggedIn} = useMyContext();
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isULoggedIn = useSelector(state => state.Auth.isLoggedIn);
+  console.log(isULoggedIn);
 
   const authStack = () => {
     return (
@@ -48,39 +52,16 @@ const Nav = () => {
   };
 
   return (
-    <Stack.Navigator>
-      {isUserLoggedIn ? mainStack() : authStack()}
-    </Stack.Navigator>
+    <Stack.Navigator>{isULoggedIn ? mainStack() : authStack()}</Stack.Navigator>
   );
 };
 function App(): JSX.Element {
-  //const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-
-  // const getUserName = async () => {
-  //   const userName = await PersistantHelper.getValue('userName');
-  //   console.log('UserName' + userName);
-  //   setIsUserLoggedIn(userName ? true : false);
-  // };
-
-  // useEffect(() => {
-  //   getUserName();
-
-  //   let event = EventRegister.addEventListener('userLoggedIn', data => {
-  //     setIsUserLoggedIn(data.email ? true : false);
-  //     console.log('data.email' + data.email);
-  //   });
-  //   console.log('loggedInValue' + isUserLoggedIn);
-  //   return () => {
-  //     EventRegister.removeEventListener(event);
-  //   };
-  // }, []);
-
   return (
-    <MyContextProvider>
+    <Provider store={store}>
       <NavigationContainer>
         <Nav />
       </NavigationContainer>
-    </MyContextProvider>
+    </Provider>
   );
 }
 

@@ -8,13 +8,13 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import PersistantHelper from '../Helpers/PersistantHelper';
-import {useMyContext} from '../Contexts/UserContext';
-import {EventRegister} from 'react-native-event-listeners';
+import {useDispatch} from 'react-redux';
+import {signIn} from '../Features/authSlice';
 const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {updateData} = useMyContext();
+
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -43,15 +43,7 @@ const Login = props => {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          //setIsUserLoggedIn(true);
-          PersistantHelper.setValue('userName', email);
-          PersistantHelper.setValue('password', password);
-          //PersistantHelper.setValue('isUserLoggedIn', true);
-          //   props.navigation.navigate('UserDetails');
-          EventRegister.emit('userName', {email});
-          EventRegister.emit('password', {password});
-          EventRegister.emit('userLoggedIn', {email});
-          updateData(true);
+          dispatch(signIn());
         }}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>
