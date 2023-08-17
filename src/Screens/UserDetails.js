@@ -10,11 +10,13 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import PersistantHelper from '../Helpers/PersistantHelper';
 import ApiHandler from '../Helpers/ApiHandler';
-import {EventRegister} from 'react-native-event-listeners';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {signOut} from '../Features/authSlice';
 
 const UserDetails = () => {
+  const dispatch = useDispatch();
   const [userName, setUserName] = useState('');
   const [myListData, setMyListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +24,6 @@ const UserDetails = () => {
   const fetchListFromApi = () => {
     console.log('fetchListFromApi');
     setIsLoading(true);
-
     ApiHandler.get('/todos')
       .then(responsejson => {
         setMyListData(responsejson);
@@ -38,21 +39,13 @@ const UserDetails = () => {
   }, []);
 
   const getUserName = async () => {
-    const username = await PersistantHelper.getValue('userName');
-    console.log('userDetails' + {username});
-    setUserName(username);
+    //const username = await PersistantHelper.getValue('userName');
+    //setUserName(username);
   };
 
   useEffect(() => {
     getUserName();
     fetchListFromApi();
-    // let event = EventRegister.addEventListener('userLoggedIn', data => {
-    //   setIsUserLoggedIn(data.username ? true : false);
-    // });
-
-    // return () => {
-    //   EventRegister.removeEventListener(event);
-    // };
   }, []);
 
   return (
@@ -62,7 +55,6 @@ const UserDetails = () => {
       </View>
       <View style={{flex: 1}}>
         <FlatList
-          //data={['a', 'b', 'c', 'd']}
           refreshing={isLoading}
           data={myListData}
           onRefresh={() => {
@@ -87,9 +79,7 @@ const UserDetails = () => {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          setUserName('');
-          PersistantHelper.setValue('userName', userName);
-          EventRegister.emit('userLoggedIn', false);
+          dispatch(signOut());
         }}>
         <Text style={styles.loginText}>LOG OUT</Text>
       </TouchableOpacity>

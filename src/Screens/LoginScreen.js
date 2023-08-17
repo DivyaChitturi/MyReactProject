@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -43,7 +43,7 @@ const Login = props => {
       <TouchableOpacity
         style={styles.loginBtn}
         onPress={() => {
-          dispatch(signIn());
+          dispatch(signIn(true));
         }}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>

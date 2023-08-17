@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {View, FlatList, Text, TouchableOpacity} from 'react-native';
-import {ApiHelper} from '../../helpers';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {cartActions} from '../Features/cartSlice';
 
 const itemlist = [

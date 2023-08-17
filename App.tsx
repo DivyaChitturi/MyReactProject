@@ -9,20 +9,15 @@ import LoginScreen from './src/Screens/LoginScreen';
 import UserDetails from './src/Screens/UserDetails';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {EventRegister} from 'react-native-event-listeners';
-import PersistantHelper from './src/Helpers/PersistantHelper';
-import {MyContextProvider, useMyContext} from './src/Contexts/UserContext';
 import {Provider} from 'react-redux';
 import store from './store';
 import ListScreen from './src/Screens/ListScreen';
 import CartScreen from './src/Screens/CartScreen';
-import {useDispatch, useSelector} from 'react-redux';
-import authSlice from './src/Features/authSlice';
+import {useSelector} from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 const Nav = () => {
-  //const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isULoggedIn = useSelector(state => state.Auth.isLoggedIn);
   console.log(isULoggedIn);
 
