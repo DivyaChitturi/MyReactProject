@@ -47,7 +47,7 @@ const itemlist = [
   },
 ];
 
-const listScreen = props => {
+const ListScreen = props => {
   const dispatch = useDispatch();
 
   const [myListData, setMyListData] = useState(itemlist);
@@ -108,4 +108,4 @@ const listScreen = props => {
     </View>
   );
 };
-export default listScreen;
+export default ListScreen;

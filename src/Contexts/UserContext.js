@@ -1,16 +1,16 @@
 import React, {createContext, useContext, useState} from 'react';
 
-const UserContext = createContext(null);
+const UserContext = createContext();
 
 export function MyContextProvider({children}) {
-  const [data, setData] = useState('');
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   const updateData = newdata => {
-    setData(newdata);
+    setIsUserLoggedIn(newdata);
   };
 
   return (
-    <UserContext.Provider value={{data, updateData}}>
+    <UserContext.Provider value={{isUserLoggedIn, updateData}}>
       {children}
     </UserContext.Provider>
   );

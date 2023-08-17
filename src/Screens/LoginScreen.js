@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import PersistantHelper from '../Helpers/PersistantHelper';
-import {UserContext} from '../Contexts/UserContext';
+import {useMyContext} from '../Contexts/UserContext';
 import {EventRegister} from 'react-native-event-listeners';
 const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  //const {setIsUserLoggedIn} = useContext(UserContext);
+  const {updateData} = useMyContext();
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -51,6 +51,7 @@ const Login = props => {
           EventRegister.emit('userName', {email});
           EventRegister.emit('password', {password});
           EventRegister.emit('userLoggedIn', {email});
+          updateData(true);
         }}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>

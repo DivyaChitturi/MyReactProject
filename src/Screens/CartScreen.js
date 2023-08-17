@@ -1,14 +1,27 @@
 import {} from 'react';
-import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {cartActions} from '../Features/cartSlice';
+import {width, widthToDp} from 'rn-responsive-screen';
+import Header from '../../src/Components/Header';
+import CartItem from '../Components/CartItem';
 
-const cartScreen = props => {
+const CartScreen = props => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => state.cart.cartItems);
+  let total = 0;
 
   return (
-    <View style={{flex: 1}}>
+    <View>
+      {/* <View style={{flex: 1}}>
       <FlatList
         data={cartItems}
         renderItem={({item, index}) => {
@@ -67,11 +80,39 @@ const cartScreen = props => {
         }}>
         <Text style={styles.loginText}>Clear Cart</Text>
       </TouchableOpacity>
+    </View> */}
+      <View>
+        <SafeAreaView style={[styles.container]}>
+          {/* SchrollView is used in order to scroll the content */}
+          {/* Using the reusable header component */}
+          <Header title="My Cart" />
+
+          {/* Mapping the products into the Cart component */}
+          <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+              <Text style={styles.text}>
+                {/* <SafeAreaView> */}
+                <FlatList
+                  data={cartItems}
+                  renderItem={({item, index}) => {
+                    total = total + item.item.price;
+                    return <CartItem product={item.item} />;
+                  }}
+                />
+                {/* </SafeAreaView> */}
+              </Text>
+            </ScrollView>
+          </SafeAreaView>
+          <View style={styles.footer}>
+            <Text style={styles.price}>${total}</Text>
+          </View>
+        </SafeAreaView>
+      </View>
     </View>
   );
 };
 
-export default cartScreen;
+export default CartScreen;
 
 const styles = StyleSheet.create({
   loginBtn: {
@@ -83,5 +124,38 @@ const styles = StyleSheet.create({
     marginTop: 40,
     backgroundColor: '#FF1493',
     flexDirection: 'flex-end',
+  },
+  container: {
+    //flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: widthToDp(90),
+    marginTop: 10,
+  },
+  total: {
+    borderTopWidth: 1,
+    paddingTop: 10,
+    borderTopColor: '#E5E5E5',
+    marginBottom: 10,
+  },
+  cartTotalText: {
+    fontSize: widthToDp(4.5),
+    color: '#989899',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'red',
+  },
+  price: {
+    fontSize: widthToDp(4),
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20,
   },
 });

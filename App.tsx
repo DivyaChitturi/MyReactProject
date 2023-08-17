@@ -11,34 +11,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {EventRegister} from 'react-native-event-listeners';
 import PersistantHelper from './src/Helpers/PersistantHelper';
-import {MyContextProvider} from './src/Contexts/UserContext';
+import {MyContextProvider, useMyContext} from './src/Contexts/UserContext';
 import {Provider} from 'react-redux';
 import store from './store';
 import ListScreen from './src/Screens/ListScreen';
 import CartScreen from './src/Screens/CartScreen';
 
 const Stack = createNativeStackNavigator();
-function App(): JSX.Element {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
-  const getUserName = async () => {
-    const userName = await PersistantHelper.getValue('userName');
-    console.log('UserName' + userName);
-    setIsUserLoggedIn(userName ? true : false);
-  };
-
-  useEffect(() => {
-    getUserName();
-
-    let event = EventRegister.addEventListener('userLoggedIn', data => {
-      setIsUserLoggedIn(data.email ? true : false);
-      console.log('data.email' + data.email);
-    });
-    console.log('loggedInValue' + isUserLoggedIn);
-    return () => {
-      EventRegister.removeEventListener(event);
-    };
-  }, []);
+const Nav = () => {
+  const {isUserLoggedIn} = useMyContext();
 
   const authStack = () => {
     return (
@@ -50,7 +32,7 @@ function App(): JSX.Element {
   const mainStack = () => {
     return (
       <Stack.Group>
-        {/* <Stack.Screen name="UserDetails" component={UserDetails} /> */}
+        <Stack.Screen name="UserDetails" component={UserDetails} />
         <Stack.Screen
           name="ListScreen"
           component={ListScreen}
@@ -64,14 +46,41 @@ function App(): JSX.Element {
       </Stack.Group>
     );
   };
+
   return (
-    <Provider store={store}>
+    <Stack.Navigator>
+      {isUserLoggedIn ? mainStack() : authStack()}
+    </Stack.Navigator>
+  );
+};
+function App(): JSX.Element {
+  //const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  // const getUserName = async () => {
+  //   const userName = await PersistantHelper.getValue('userName');
+  //   console.log('UserName' + userName);
+  //   setIsUserLoggedIn(userName ? true : false);
+  // };
+
+  // useEffect(() => {
+  //   getUserName();
+
+  //   let event = EventRegister.addEventListener('userLoggedIn', data => {
+  //     setIsUserLoggedIn(data.email ? true : false);
+  //     console.log('data.email' + data.email);
+  //   });
+  //   console.log('loggedInValue' + isUserLoggedIn);
+  //   return () => {
+  //     EventRegister.removeEventListener(event);
+  //   };
+  // }, []);
+
+  return (
+    <MyContextProvider>
       <NavigationContainer>
-        <Stack.Navigator>
-          {isUserLoggedIn ? mainStack() : authStack()}
-        </Stack.Navigator>
+        <Nav />
       </NavigationContainer>
-    </Provider>
+    </MyContextProvider>
   );
 }
 
