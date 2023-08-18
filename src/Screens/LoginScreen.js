@@ -3,91 +3,161 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
   Button,
   TouchableOpacity,
+  Dimensions,
+  Pressable,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {signIn} from '../Features/authSlice';
+import styles from '../../styles';
+import Svg, {Image, Ellipse, ClipPath} from 'react-native-svg';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  interpolate,
+  withTiming,
+  withDelay,
+  runOnJS,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
+
 const Login = props => {
+  const dispatch = useDispatch();
+  const {height, width} = Dimensions.get('window');
+  const imagePosition = useSharedValue(1);
+  const formButtonScale = useSharedValue(1);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const dispatch = useDispatch();
+  const imageAnimatedStyle = useAnimatedStyle(() => {
+    const interpolation = interpolate(
+      imagePosition.value,
+      [0, 1],
+      [-height / 2, 0],
+    );
+    return {
+      transform: [{translateY: withTiming(interpolation, {duration: 1000})}],
+    };
+  });
+  console.log('Login');
+  const buttonsAnimatedStyle = useAnimatedStyle(() => {
+    const interpolation = interpolate(imagePosition.value, [0, 1], [250, 0]);
+    return {
+      opacity: withTiming(imagePosition.value, {duration: 500}),
+      transform: [{translateY: withTiming(interpolation, {diration: 1000})}],
+    };
+  });
+
+  const closeButtonContainerStyle = useAnimatedStyle(() => {
+    const interpolation = interpolate(imagePosition.value, [0, 1], [180, 360]);
+    return {
+      opacity: withTiming(imagePosition.value === 1 ? 0 : 1, {duration: 800}),
+      transform: [
+        {rotate: withTiming(interpolation + 'deg', {duration: 1000})},
+      ],
+    };
+  });
+
+  const formAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity:
+        imagePosition.value === 0
+          ? withDelay(400, withTiming(1, {duration: 800}))
+          : withTiming(0, {duration: 300}),
+    };
+  });
+
+  const formButtonAnimatedStyle = useAnimatedStyle(() => {
+    return {transform: [{scale: formButtonScale.value}]};
+  });
+  const loginHandler = () => {
+    imagePosition.value = 0;
+    if (isRegistering) {
+      //setIsRegistering(false);
+      runOnJS(setIsRegistering)(false);
+    }
+  };
+  const registerHandler = () => {
+    imagePosition.value = 0;
+    if (!isRegistering) {
+      //setIsRegistering(true);
+      runOnJS(setIsRegistering)(true);
+    }
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.container}>
-        <Text>Welcome</Text>
+    <Animated.View style={styles.container}>
+      <Animated.View style={[StyleSheet.absoluteFill, imageAnimatedStyle]}>
+        <Svg height={height} width={width}>
+          <ClipPath id="clipPathId">
+            <Ellipse cx={width / 2} rx={height} ry={height} />
+          </ClipPath>
+          <Image
+            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/AwesomeProject/Assets/Images/login-background.jpg')}
+            width={width + 5}
+            height={height + 5}
+            preserveAspectRatio="xMidYMid slice"
+            clipPath="url(#clipPathId)"
+          />
+        </Svg>
+        <Animated.View
+          style={[styles.closeButtonContainer, closeButtonContainerStyle]}>
+          <Text onPress={() => (imagePosition.value = 1)}>X</Text>
+        </Animated.View>
+      </Animated.View>
+      <View style={styles.bottomContainer}>
+        <Animated.View style={buttonsAnimatedStyle}>
+          <Pressable style={styles.button} onPress={loginHandler}>
+            <Text style={styles.buttonText}>LOG IN</Text>
+          </Pressable>
+        </Animated.View>
+        <Animated.View style={buttonsAnimatedStyle}>
+          <Pressable style={styles.button} onPress={registerHandler}>
+            <Text style={styles.buttonText}>REGISTER</Text>
+          </Pressable>
+        </Animated.View>
+        <Animated.View style={[styles.formInputContainer, formAnimatedStyle]}>
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="black"
+            style={styles.textInput}
+            onChangeText={email => setEmail(email)}
+          />
+          {isRegistering && (
+            <TextInput
+              placeholder="Full Name"
+              placeholderTextColor="black"
+              style={styles.textInput}
+            />
+          )}
+
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="black"
+            style={styles.textInput}
+            onChangeText={password => setPassword(password)}
+          />
+          <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
+            <Pressable
+              onPress={() => {
+                dispatch(signIn(true));
+                formButtonScale.value = withSequence(
+                  withSpring(1.5),
+                  withSpring(1),
+                );
+              }}>
+              <Text style={styles.buttonText}>
+                {isRegistering ? 'REGISTER' : 'LOG IN'}
+              </Text>
+            </Pressable>
+          </Animated.View>
+        </Animated.View>
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email."
-          placeholderTextColor="#003f5c"
-          onChangeText={email => setEmail(email)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Password."
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={password => setPassword(password)}
-        />
-      </View>
-      <TouchableOpacity>
-        <Text style={styles.forgot_button}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => {
-          dispatch(signIn(true));
-        }}>
-        <Text style={styles.loginText}>LOGIN</Text>
-      </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    marginBottom: 40,
-  },
-  inputView: {
-    backgroundColor: '#FFC0CB',
-    borderRadius: 30,
-    width: '70%',
-    height: 45,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 20,
-  },
-  forgot_button: {
-    height: 30,
-    marginBottom: 30,
-  },
-  loginBtn: {
-    width: '80%',
-    borderRadius: 25,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 40,
-    backgroundColor: '#FF1493',
-  },
-});
