@@ -4,6 +4,7 @@
  *
  * @format
  */
+import analytics from '@react-native-firebase/analytics';
 import React, {useEffect, useState} from 'react';
 import LoginScreen from './src/Screens/LoginScreen';
 import UserDetails from './src/Screens/UserDetails';
@@ -14,6 +15,8 @@ import store from './store';
 import ListScreen from './src/Screens/ListScreen';
 import CartScreen from './src/Screens/CartScreen';
 import {useSelector} from 'react-redux';
+
+import {useNavigationContainerRef} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +54,12 @@ const Nav = () => {
   );
 };
 function App(): JSX.Element {
+  useEffect(() => {
+    analytics().logEvent('testrun', {
+      name: 'Divya',
+    });
+  });
+  const navigationRef = useNavigationContainerRef();
   return (
     <Provider store={store}>
       <NavigationContainer>

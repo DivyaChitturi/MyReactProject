@@ -4,8 +4,6 @@ import {
   Text,
   View,
   TextInput,
-  Button,
-  TouchableOpacity,
   Dimensions,
   Pressable,
 } from 'react-native';
@@ -96,7 +94,7 @@ const Login = props => {
             <Ellipse cx={width / 2} rx={height} ry={height} />
           </ClipPath>
           <Image
-            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/AwesomeProject/Assets/Images/login-background.jpg')}
+            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/AwesomeProject/Assets/Images/HomeImage.jpeg')}
             width={width + 5}
             height={height + 5}
             preserveAspectRatio="xMidYMid slice"

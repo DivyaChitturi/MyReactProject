@@ -4,39 +4,32 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
-  Button,
-  TouchableOpacity,
-  FlatList,
+  Dimensions,
+  Pressable,
 } from 'react-native';
-import ApiHandler from '../Helpers/ApiHandler';
+import styles from '../../styles';
+import Svg, {Image, Ellipse, ClipPath} from 'react-native-svg';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  interpolate,
+  withTiming,
+  withDelay,
+  runOnJS,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {signOut} from '../Features/authSlice';
 
 const UserDetails = () => {
   const dispatch = useDispatch();
+  const {height, width} = Dimensions.get('window');
   const [userName, setUserName] = useState('');
   const [myListData, setMyListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const fetchListFromApi = () => {
-    console.log('fetchListFromApi');
-    setIsLoading(true);
-    ApiHandler.get('/todos')
-      .then(responsejson => {
-        setMyListData(responsejson);
-        setIsLoading(false);
-      })
-      .catch(error => {
-        setIsLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    fetchListFromApi();
-  }, []);
 
   const getUserName = async () => {
     //const username = await PersistantHelper.getValue('userName');
@@ -44,66 +37,31 @@ const UserDetails = () => {
   };
 
   useEffect(() => {
-    getUserName();
-    fetchListFromApi();
+    //getUserName();
+    //fetchListFromApi();
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputView}>
-        <Text>Welcome {userName}</Text>
-      </View>
-      <View style={{flex: 1}}>
-        <FlatList
-          refreshing={isLoading}
-          data={myListData}
-          onRefresh={() => {
-            console.log('myListData' + myListData);
-            fetchListFromApi();
-          }}
-          renderItem={({item, index}) => {
-            return (
-              <View
-                style={{
-                  height: 60,
-                  marginHorizontal: 10,
-                  borderBottomColor: 'black',
-                  borderBottomWidth: 1,
-                }}>
-                <Text>{item.title}</Text>
-              </View>
-            );
-          }}
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => {
-          dispatch(signOut());
-        }}>
-        <Text style={styles.loginText}>LOG OUT</Text>
-      </TouchableOpacity>
-    </View>
+    <Animated.View style={styles.container}>
+      <Animated.View style={[StyleSheet.absoluteFill]}>
+        <Svg height={height} width={width}>
+          <Image
+            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/AwesomeProject/Assets/Images/woman-calculating-bills.jpg')}
+            width={width + 5}
+            height={height + 5}
+            preserveAspectRatio="xMidYMid slice"
+          />
+        </Svg>
+        <View style={styles.container}>
+          <Animated.View>
+            <Text style={styles.buttonText}>LOG IN</Text>
+          </Animated.View>
+        </View>
+      </Animated.View>
+      <Text style={styles.buttonText}>LOG IN</Text>
+      <Animated.View></Animated.View>
+    </Animated.View>
   );
 };
 
 export default UserDetails;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loginBtn: {
-    width: '80%',
-    borderRadius: 25,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 40,
-    backgroundColor: '#FF1493',
-    flexDirection: 'flex-end',
-  },
-});
