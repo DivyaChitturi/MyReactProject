@@ -21,6 +21,7 @@ import Animated, {
   withSequence,
   withSpring,
 } from 'react-native-reanimated';
+import auth from '@react-native-firebase/auth';
 
 const Login = props => {
   const dispatch = useDispatch();
@@ -141,11 +142,27 @@ const Login = props => {
           <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
             <Pressable
               onPress={() => {
-                dispatch(signIn(true));
-                formButtonScale.value = withSequence(
-                  withSpring(1.5),
-                  withSpring(1),
-                );
+                //dispatch(signIn(true));
+                auth()
+                  .createUserWithEmailAndPassword(email, password)
+                  .then(() => {
+                    console.log('User account created & signed in!');
+                  })
+                  .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                      console.log('That email address is already in use!');
+                    }
+
+                    if (error.code === 'auth/invalid-email') {
+                      console.log('That email address is invalid!');
+                    }
+
+                    console.error(error);
+                  });
+                // formButtonScale.value = withSequence(
+                //   withSpring(1.5),
+                //   withSpring(1),
+                // );
               }}>
               <Text style={styles.buttonText}>
                 {isRegistering ? 'REGISTER' : 'LOG IN'}
