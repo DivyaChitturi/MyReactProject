@@ -147,6 +147,7 @@ const Login = props => {
                   .createUserWithEmailAndPassword(email, password)
                   .then(() => {
                     console.log('User account created & signed in!');
+                    dispatch(signIn(true));
                   })
                   .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
