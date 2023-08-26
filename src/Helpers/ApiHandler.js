@@ -7,17 +7,29 @@ import {
 
 class ApiHandler {
   async get(url, data) {
-    const completeUrl = kApiUrlEndpoint + url;
-    const response = await fetch(completeUrl, data).then(x => x.json());
-
+    if (!url.includes('http')) {
+      url = kApiUrlEndpoint + url;
+    }
+    const response = await fetch(url, data).then(x => x.json());
     return new Promise((resolve, reject) => {
       this.handlePromise(resolve, reject, response);
     });
   }
-
   async post(url, data) {
-    const response = await fetch(url, data).then(x => x.json());
+    if (!url.includes('http')) {
+      url = kApiUrlEndpoint + url;
+      console.log(url);
+    }
 
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+      body: JSON.stringify(data),
+    }).then(x => x.json());
     return new Promise((resolve, reject) => {
       this.handlePromise(resolve, reject, response);
     });

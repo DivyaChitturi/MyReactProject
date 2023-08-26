@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+
+import {useDispatch} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -7,7 +9,6 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
 import {signIn} from '../Features/authSlice';
 import styles from '../../styles';
 import Svg, {Image, Ellipse, ClipPath} from 'react-native-svg';
@@ -22,6 +23,11 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import auth from '@react-native-firebase/auth';
+import {userActions} from '../Features/userSlice';
+import {kApiSignup} from '../Config/Constants';
+import {useSelector} from 'react-redux';
+
+const {request, clear} = userActions;
 
 const Login = props => {
   const dispatch = useDispatch();
@@ -29,8 +35,15 @@ const Login = props => {
   const imagePosition = useSharedValue(1);
   const formButtonScale = useSharedValue(1);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const user = useSelector(state => state.user);
+
+  useEffect(() => {
+    dispatch(clear());
+  }, []);
 
   const imageAnimatedStyle = useAnimatedStyle(() => {
     const interpolation = interpolate(
@@ -130,6 +143,7 @@ const Login = props => {
               placeholder="Full Name"
               placeholderTextColor="black"
               style={styles.textInput}
+              onChangeText={userName => setUserName(userName)}
             />
           )}
 
@@ -140,35 +154,41 @@ const Login = props => {
             onChangeText={password => setPassword(password)}
           />
           <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
-            <Pressable
-              onPress={() => {
-                //dispatch(signIn(true));
-                auth()
-                  .createUserWithEmailAndPassword(email, password)
-                  .then(() => {
-                    console.log('User account created & signed in!');
-                    dispatch(signIn(true));
-                  })
-                  .catch(error => {
-                    if (error.code === 'auth/email-already-in-use') {
-                      console.log('That email address is already in use!');
-                    }
-
-                    if (error.code === 'auth/invalid-email') {
-                      console.log('That email address is invalid!');
-                    }
-
-                    console.error(error);
-                  });
-                // formButtonScale.value = withSequence(
-                //   withSpring(1.5),
-                //   withSpring(1),
-                // );
-              }}>
-              <Text style={styles.buttonText}>
-                {isRegistering ? 'REGISTER' : 'LOG IN'}
-              </Text>
-            </Pressable>
+            {isRegistering ? (
+              <Pressable
+                onPress={() => {
+                  dispatch(
+                    request({
+                      url: kApiSignup,
+                      data: {userName, email, password},
+                    }),
+                  );
+                }}>
+                <Text style={styles.buttonText}>REGISTER</Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={() => {
+                  auth()
+                    .createUserWithEmailAndPassword(email, password)
+                    .then(() => {
+                      console.log('User account created & signed in!');
+                      dispatch(signIn(true));
+                      // Alert('Login');
+                    })
+                    .catch(error => {
+                      if (error.code === 'auth/email-already-in-use') {
+                        console.log('That email address is already in use!');
+                      }
+                      if (error.code === 'auth/invalid-email') {
+                        console.log('That email address is invalid!');
+                      }
+                      console.error(error);
+                    });
+                }}>
+                <Text style={styles.buttonText}>LOG IN</Text>
+              </Pressable>
+            )}
           </Animated.View>
         </Animated.View>
       </View>
