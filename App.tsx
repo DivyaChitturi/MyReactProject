@@ -14,6 +14,8 @@ import {Provider} from 'react-redux';
 import store from './store';
 import ListScreen from './src/Screens/ListScreen';
 import CartScreen from './src/Screens/CartScreen';
+import TestSaga from './src/Containers/TestSaga';
+import FireStoreScreen from './src/Screens/FireStoreScreen';
 import {useSelector} from 'react-redux';
 
 import {useNavigationContainerRef} from '@react-navigation/native';
@@ -22,7 +24,13 @@ const Stack = createNativeStackNavigator();
 
 const Nav = () => {
   const isULoggedIn = useSelector(state => state.Auth.isLoggedIn);
-  console.log(isULoggedIn);
+
+  // const user = useSelector(state => state.user);
+  // const isULoggedIn =
+  //   typeof user?.data?.id === 'string' && user?.data?.id.length > 20
+  //     ? true
+  //     : false;
+  // console.log(isULoggedIn);
 
   const authStack = () => {
     return (
@@ -34,6 +42,8 @@ const Nav = () => {
   const mainStack = () => {
     return (
       <Stack.Group>
+        <Stack.Screen name="FireStoreScreen" component={FireStoreScreen} />
+        <Stack.Screen name="TestSaga" component={TestSaga} />
         <Stack.Screen name="UserDetails" component={UserDetails} />
         <Stack.Screen
           name="ListScreen"
