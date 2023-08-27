@@ -16,6 +16,7 @@ import ListScreen from './src/Screens/ListScreen';
 import CartScreen from './src/Screens/CartScreen';
 import TestSaga from './src/Containers/TestSaga';
 import FireStoreScreen from './src/Screens/FireStoreScreen';
+import MapScreen from './src/Screens/MapScreen';
 import {useSelector} from 'react-redux';
 
 import {useNavigationContainerRef} from '@react-navigation/native';
@@ -35,6 +36,7 @@ const Nav = () => {
   const authStack = () => {
     return (
       <Stack.Group>
+        <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Group>
     );
