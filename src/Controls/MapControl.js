@@ -41,11 +41,12 @@ const MapControl = forwardRef((props, ref) => {
   return (
     <View style={[props.style]}>
       <MapView
-        // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={{flex: 1}}
         ref={mapRef}
-        showsUserLocation
-        showsMyLocationButton>
+        rotateEnabled={false}
+        showsUserLocation={true}
+        showsMyLocationButton={true}>
         {renderMarkers()}
       </MapView>
     </View>

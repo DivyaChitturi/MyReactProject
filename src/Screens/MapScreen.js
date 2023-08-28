@@ -1,9 +1,31 @@
-import {useRef} from 'react';
+import {useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import MapControl from '../Controls/MapControl';
+import LocationHelper from '../Helpers/LocationHelper';
 
 const MapScreen = () => {
-  const mapRef = useRef(null);
+  useEffect(() => {
+    LocationHelper.checkLocationPermission(
+      () => {
+        LocationHelper.trackUserLocation(
+          locationObject => {
+            console.log(locationObject);
+
+            if (locationObject.coords) {
+              parentControlMapRef.current.animateToCustomLocation({
+                latitude: locationObject.coords.latitude,
+                longitude: locationObject.coords.longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              });
+            }
+          },
+          error => {},
+        );
+      },
+      () => {},
+    );
+  }, []);
 
   const parentControlMapRef = useRef(null);
   return (
@@ -67,7 +89,7 @@ const MapScreen = () => {
             <Text>ITC Office</Text>
           </TouchableOpacity>
         </View>
-        <View style={{flex: 1}}>
+        {/* <View style={{flex: 1}}>
           <TouchableOpacity
             onPress={() => {
               //27.1751495,78.0395619
@@ -94,7 +116,7 @@ const MapScreen = () => {
             }}>
             <Text>TajMahal</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );
