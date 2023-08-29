@@ -36,7 +36,6 @@ const Nav = () => {
   const authStack = () => {
     return (
       <Stack.Group>
-        <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Group>
     );
@@ -45,6 +44,7 @@ const Nav = () => {
     return (
       <Stack.Group>
         <Stack.Screen name="FireStoreScreen" component={FireStoreScreen} />
+        <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="TestSaga" component={TestSaga} />
         <Stack.Screen name="UserDetails" component={UserDetails} />
         <Stack.Screen

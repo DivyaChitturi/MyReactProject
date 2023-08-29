@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -24,8 +24,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import auth from '@react-native-firebase/auth';
 import {userActions} from '../Features/userSlice';
-import {kApiSignup} from '../Config/Constants';
-import {useSelector} from 'react-redux';
+import {kApiSignup, kApiLogin} from '../Config/Constants';
 
 const {request, clear} = userActions;
 
@@ -169,22 +168,7 @@ const Login = props => {
             ) : (
               <Pressable
                 onPress={() => {
-                  auth()
-                    .createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                      console.log('User account created & signed in!');
-                      dispatch(signIn(true));
-                      // Alert('Login');
-                    })
-                    .catch(error => {
-                      if (error.code === 'auth/email-already-in-use') {
-                        console.log('That email address is already in use!');
-                      }
-                      if (error.code === 'auth/invalid-email') {
-                        console.log('That email address is invalid!');
-                      }
-                      console.error(error);
-                    });
+                  dispatch(request({url: kApiLogin, data: {email, password}}));
                 }}>
                 <Text style={styles.buttonText}>LOG IN</Text>
               </Pressable>
