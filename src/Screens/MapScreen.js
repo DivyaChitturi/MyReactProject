@@ -46,20 +46,18 @@ const MapScreen = () => {
               });
             }}
             style={{
-              position: 'absolute',
               left: 10,
               right: 10,
-              bottom: 20,
+              bottom: 30,
               backgroundColor: 'green',
               borderRadius: 15,
               justifyContent: 'center',
               alignItems: 'center',
-              width: 98,
-              height: 98,
+              width: 70,
+              height: 70,
               margin: 4,
-              //alignSelf: 'flex-end',
             }}>
-            <Text>Apple HeadQuarters</Text>
+            <Text>Apple HQ</Text>
           </TouchableOpacity>
         </View>
         <View style={{flex: 1}}>
@@ -73,26 +71,23 @@ const MapScreen = () => {
               });
             }}
             style={{
-              position: 'absolute',
               left: 10,
               right: 10,
-              bottom: 20,
+              bottom: 30,
               backgroundColor: 'yellow',
               borderRadius: 15,
               justifyContent: 'center',
               alignItems: 'center',
-              width: 98,
-              height: 98,
+              width: 70,
+              height: 70,
               margin: 4,
-              //alignSelf: 'flex-center',
             }}>
             <Text>ITC Office</Text>
           </TouchableOpacity>
         </View>
-        {/* <View style={{flex: 1}}>
+        <View style={{flex: 1}}>
           <TouchableOpacity
             onPress={() => {
-              //27.1751495,78.0395619
               parentControlMapRef.current.animateToCustomLocation({
                 latitude: 27.1751495,
                 longitude: 78.0395619,
@@ -101,22 +96,20 @@ const MapScreen = () => {
               });
             }}
             style={{
-              position: 'absolute',
               left: 10,
               right: 10,
-              bottom: 20,
+              bottom: 30,
               backgroundColor: 'pink',
               borderRadius: 15,
               justifyContent: 'center',
               alignItems: 'center',
-              width: 98,
-              height: 98,
+              width: 70,
+              height: 70,
               margin: 4,
-              //alignSelf: 'flex-end',
             }}>
             <Text>TajMahal</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
     </View>
   );

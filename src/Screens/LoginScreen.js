@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions,
   Pressable,
+  Alert,
 } from 'react-native';
 import {signIn} from '../Features/authSlice';
 import styles from '../../styles';
@@ -25,6 +26,7 @@ import Animated, {
 import auth from '@react-native-firebase/auth';
 import {userActions} from '../Features/userSlice';
 import {kApiSignup, kApiLogin} from '../Config/Constants';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 
 const {request, clear} = userActions;
 
@@ -39,6 +41,13 @@ const Login = props => {
   const [password, setPassword] = useState('');
 
   const user = useSelector(state => state.user);
+
+  function handlePress() {
+    console.log('Message');
+    showMessage({
+      message: 'Registed Successfully!',
+    });
+  }
 
   useEffect(() => {
     dispatch(clear());
@@ -153,22 +162,48 @@ const Login = props => {
             onChangeText={password => setPassword(password)}
           />
           <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
+            <FlashMessage />
             {isRegistering ? (
               <Pressable
                 onPress={() => {
-                  dispatch(
-                    request({
-                      url: kApiSignup,
-                      data: {userName, email, password},
-                    }),
-                  );
+                  // dispatch(
+                  //   request({
+                  //     url: kApiSignup,
+                  //     data: {userName, email, password},
+                  //   }),
+                  // );
+                  auth()
+                    .createUserWithEmailAndPassword(email, password)
+                    .then(() => {
+                      console.log('User account created & signed in!');
+                      handlePress();
+                      //dispatch(signIn(true));
+                    })
+                    .catch(error => {
+                      if (error.code === 'auth/email-already-in-use') {
+                        console.log('That email address is already in use!');
+                      }
+                      if (error.code === 'auth/invalid-email') {
+                        console.log('That email address is invalid!');
+                      }
+                      console.error(error);
+                    });
                 }}>
                 <Text style={styles.buttonText}>REGISTER</Text>
               </Pressable>
             ) : (
               <Pressable
                 onPress={() => {
-                  dispatch(request({url: kApiLogin, data: {email, password}}));
+                  //dispatch(request({url: kApiLogin, data: {email, password}}));
+                  auth()
+                    .signInWithEmailAndPassword(email, password)
+                    .then(userCredential => {
+                      dispatch(signIn(true));
+                    })
+                    .catch(error => {
+                      var errorCode = error.code;
+                      var errorMessage = error.message;
+                    });
                 }}>
                 <Text style={styles.buttonText}>LOG IN</Text>
               </Pressable>

@@ -1,8 +1,27 @@
 import {useEffect, useState} from 'react';
-import {View, Text, FlatList, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  interpolate,
+  withTiming,
+  withDelay,
+  runOnJS,
+  withSequence,
+  withSpring,
+} from 'react-native-reanimated';
 
-const FireStoreScreen = () => {
+import styles from '../../styles';
+
+const FireStoreScreen = props => {
   const [usersList, setUsersList] = useState([]);
   const [userName, setUserName] = useState('');
   const [userLocation, setUserLocation] = useState('');
@@ -15,7 +34,6 @@ const FireStoreScreen = () => {
     try {
       const userDetailsCollection = await firestore()
         .collection('UserDetails')
-        // .where('carType', '==', 'Hatchback')
         .get();
 
       setUsersList(userDetailsCollection._docs);
@@ -26,14 +44,24 @@ const FireStoreScreen = () => {
 
   return (
     <View>
-      <Text>firestore</Text>
+      <Text>Firestore Data</Text>
+      <Text>User Name</Text>
+      <Text>User Location</Text>
       <FlatList
         data={usersList}
         renderItem={({item, index}) => {
           console.log(item);
 
           return (
-            <View>
+            <View
+              style={{
+                height: 60,
+                marginHorizontal: 80,
+                borderBottomColor: 'black',
+                borderBottomWidth: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
               <Text>{item._data.userName}</Text>
               <Text>{item._data.userLocation}</Text>
             </View>
@@ -43,11 +71,7 @@ const FireStoreScreen = () => {
       <TextInput
         placeholder="User Name"
         value={userName}
-        style={{
-          height: 40,
-          backgroundColor: 'yellow',
-          margin: 10,
-        }}
+        style={styles.textInput}
         onChangeText={changedText => {
           setUserName(changedText);
         }}
@@ -56,17 +80,14 @@ const FireStoreScreen = () => {
       <TextInput
         placeholder="User Location"
         value={userLocation}
-        style={{
-          height: 40,
-          backgroundColor: 'yellow',
-          margin: 10,
-        }}
+        style={styles.textInput}
         onChangeText={changedText => {
           setUserLocation(changedText);
         }}
       />
 
       <TouchableOpacity
+        style={{alignItems: 'center'}}
         onPress={() => {
           firestore()
             .collection('UserDetails')
@@ -82,8 +103,24 @@ const FireStoreScreen = () => {
               console.log(error);
             });
         }}>
-        <Text>Submit</Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: '600',
+            color: 'red',
+            letterSpacing: 0.5,
+          }}>
+          Submit
+        </Text>
       </TouchableOpacity>
+      <Animated.View style={[styles.formButton]}>
+        <Pressable
+          onPress={() => {
+            props.navigation.navigate('MapScreen');
+          }}>
+          <Text style={styles.buttonText}>Map View</Text>
+        </Pressable>
+      </Animated.View>
     </View>
   );
 };
