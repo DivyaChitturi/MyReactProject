@@ -1,218 +1,164 @@
-import React, {useState, useEffect} from 'react';
-
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
-  Dimensions,
-  Pressable,
+  TouchableOpacity,
+  Image,
   Alert,
 } from 'react-native';
-import {signIn} from '../Features/authSlice';
-import styles from '../../styles';
-import Svg, {Image, Ellipse, ClipPath} from 'react-native-svg';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  interpolate,
-  withTiming,
-  withDelay,
-  runOnJS,
-  withSequence,
-  withSpring,
-} from 'react-native-reanimated';
-import auth from '@react-native-firebase/auth';
-import {userActions} from '../Features/userSlice';
-import {kApiSignup, kApiLogin} from '../Config/Constants';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
 
-const {request, clear} = userActions;
+export default Login = () => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
 
-const Login = props => {
-  const dispatch = useDispatch();
-  const {height, width} = Dimensions.get('window');
-  const imagePosition = useSharedValue(1);
-  const formButtonScale = useSharedValue(1);
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const user = useSelector(state => state.user);
-
-  function handlePress() {
-    console.log('Message');
-    showMessage({
-      message: 'Registed Successfully!',
-    });
-  }
-
-  useEffect(() => {
-    dispatch(clear());
-  }, []);
-
-  const imageAnimatedStyle = useAnimatedStyle(() => {
-    const interpolation = interpolate(
-      imagePosition.value,
-      [0, 1],
-      [-height / 2, 0],
-    );
-    return {
-      transform: [{translateY: withTiming(interpolation, {duration: 1000})}],
-    };
-  });
-  console.log('Login');
-  const buttonsAnimatedStyle = useAnimatedStyle(() => {
-    const interpolation = interpolate(imagePosition.value, [0, 1], [250, 0]);
-    return {
-      opacity: withTiming(imagePosition.value, {duration: 500}),
-      transform: [{translateY: withTiming(interpolation, {diration: 1000})}],
-    };
-  });
-
-  const closeButtonContainerStyle = useAnimatedStyle(() => {
-    const interpolation = interpolate(imagePosition.value, [0, 1], [180, 360]);
-    return {
-      opacity: withTiming(imagePosition.value === 1 ? 0 : 1, {duration: 800}),
-      transform: [
-        {rotate: withTiming(interpolation + 'deg', {duration: 1000})},
-      ],
-    };
-  });
-
-  const formAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity:
-        imagePosition.value === 0
-          ? withDelay(400, withTiming(1, {duration: 800}))
-          : withTiming(0, {duration: 300}),
-    };
-  });
-
-  const formButtonAnimatedStyle = useAnimatedStyle(() => {
-    return {transform: [{scale: formButtonScale.value}]};
-  });
-  const loginHandler = () => {
-    imagePosition.value = 0;
-    if (isRegistering) {
-      //setIsRegistering(false);
-      runOnJS(setIsRegistering)(false);
-    }
+  const showAlert = viewId => {
+    Alert.alert('Alert', 'Button pressed ' + viewId);
   };
-  const registerHandler = () => {
-    imagePosition.value = 0;
-    if (!isRegistering) {
-      //setIsRegistering(true);
-      runOnJS(setIsRegistering)(true);
-    }
-  };
+
   return (
-    <Animated.View style={styles.container}>
-      <Animated.View style={[StyleSheet.absoluteFill, imageAnimatedStyle]}>
-        <Svg height={height} width={width}>
-          <ClipPath id="clipPathId">
-            <Ellipse cx={width / 2} rx={height} ry={height} />
-          </ClipPath>
-          <Image
-            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/AwesomeProject/Assets/Images/HomeImage.jpeg')}
-            width={width + 5}
-            height={height + 5}
-            preserveAspectRatio="xMidYMid slice"
-            clipPath="url(#clipPathId)"
-          />
-        </Svg>
-        <Animated.View
-          style={[styles.closeButtonContainer, closeButtonContainerStyle]}>
-          <Text onPress={() => (imagePosition.value = 1)}>X</Text>
-        </Animated.View>
-      </Animated.View>
-      <View style={styles.bottomContainer}>
-        <Animated.View style={buttonsAnimatedStyle}>
-          <Pressable style={styles.button} onPress={loginHandler}>
-            <Text style={styles.buttonText}>LOG IN</Text>
-          </Pressable>
-        </Animated.View>
-        <Animated.View style={buttonsAnimatedStyle}>
-          <Pressable style={styles.button} onPress={registerHandler}>
-            <Text style={styles.buttonText}>REGISTER</Text>
-          </Pressable>
-        </Animated.View>
-        <Animated.View style={[styles.formInputContainer, formAnimatedStyle]}>
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="black"
-            style={styles.textInput}
-            onChangeText={email => setEmail(email)}
-          />
-          {isRegistering && (
-            <TextInput
-              placeholder="Full Name"
-              placeholderTextColor="black"
-              style={styles.textInput}
-              onChangeText={userName => setUserName(userName)}
-            />
-          )}
-
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="black"
-            style={styles.textInput}
-            onChangeText={password => setPassword(password)}
-          />
-          <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
-            <FlashMessage />
-            {isRegistering ? (
-              <Pressable
-                onPress={() => {
-                  // dispatch(
-                  //   request({
-                  //     url: kApiSignup,
-                  //     data: {userName, email, password},
-                  //   }),
-                  // );
-                  auth()
-                    .createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                      console.log('User account created & signed in!');
-                      handlePress();
-                      //dispatch(signIn(true));
-                    })
-                    .catch(error => {
-                      if (error.code === 'auth/email-already-in-use') {
-                        console.log('That email address is already in use!');
-                      }
-                      if (error.code === 'auth/invalid-email') {
-                        console.log('That email address is invalid!');
-                      }
-                      console.error(error);
-                    });
-                }}>
-                <Text style={styles.buttonText}>REGISTER</Text>
-              </Pressable>
-            ) : (
-              <Pressable
-                onPress={() => {
-                  //dispatch(request({url: kApiLogin, data: {email, password}}));
-                  auth()
-                    .signInWithEmailAndPassword(email, password)
-                    .then(userCredential => {
-                      dispatch(signIn(true));
-                    })
-                    .catch(error => {
-                      var errorCode = error.code;
-                      var errorMessage = error.message;
-                    });
-                }}>
-                <Text style={styles.buttonText}>LOG IN</Text>
-              </Pressable>
-            )}
-          </Animated.View>
-        </Animated.View>
+    <View style={styles.container}>
+      <Image
+        style={styles.bgImage}
+        source={{
+          uri: '/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/MyReactProject/Assets/Images/HomeImage.jpeg',
+        }}
+      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputs}
+          placeholder="Email"
+          keyboardType="email-address"
+          underlineColorAndroid="transparent"
+          onChangeText={email => setEmail({email})}
+        />
+        <Image
+          style={styles.inputIcon}
+          source={{uri: 'https://img.icons8.com/nolan/40/000000/email.png'}}
+        />
       </View>
-    </Animated.View>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputs}
+          placeholder="Password"
+          secureTextEntry={true}
+          underlineColorAndroid="transparent"
+          onChangeText={password => setPassword({password})}
+        />
+        <Image
+          style={styles.inputIcon}
+          source={{uri: 'https://img.icons8.com/nolan/40/000000/key.png'}}
+        />
+      </View>
+
+      <TouchableOpacity
+        style={styles.btnForgotPassword}
+        onPress={() => showAlert('restore_password')}>
+        <Text style={styles.btnText}>Forgot your password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.buttonContainer, styles.loginButton]}
+        onPress={() => showAlert('login')}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={() => showAlert('Sign up')}>
+        <Text style={styles.btnText}>Sign Up</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
-export default Login;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#DCDCDC',
+  },
+  inputContainer: {
+    borderBottomColor: '#F5FCFF',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 30,
+    borderBottomWidth: 1,
+    width: 300,
+    height: 45,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    shadowColor: '#808080',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  inputs: {
+    height: 45,
+    marginLeft: 16,
+    borderBottomColor: '#FFFFFF',
+    flex: 1,
+  },
+  inputIcon: {
+    width: 30,
+    height: 30,
+    marginRight: 15,
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 300,
+    borderRadius: 30,
+    backgroundColor: 'transparent',
+  },
+  btnForgotPassword: {
+    height: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    marginBottom: 10,
+    width: 300,
+    backgroundColor: 'transparent',
+  },
+  loginButton: {
+    backgroundColor: '#00b5ec',
+
+    shadowColor: '#808080',
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 12.35,
+
+    elevation: 19,
+  },
+  loginText: {
+    color: 'white',
+  },
+  bgImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+  },
+  btnText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+});

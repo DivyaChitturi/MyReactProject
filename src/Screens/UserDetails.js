@@ -10,17 +10,6 @@ import {
 } from 'react-native';
 import styles from '../../styles';
 import Svg, {Image, Ellipse, ClipPath} from 'react-native-svg';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  interpolate,
-  withTiming,
-  withDelay,
-  runOnJS,
-  withSequence,
-  withSpring,
-} from 'react-native-reanimated';
-
 import {useDispatch, useSelector} from 'react-redux';
 import {signOut} from '../Features/authSlice';
 
@@ -42,25 +31,24 @@ const UserDetails = () => {
   }, []);
 
   return (
-    <Animated.View style={styles.container}>
-      <Animated.View style={[StyleSheet.absoluteFill]}>
+    <View style={styles.container}>
+      <View style={[StyleSheet.absoluteFill]}>
         <Svg height={height} width={width}>
           <Image
-            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/AwesomeProject/Assets/Images/woman-calculating-bills.jpg')}
+            href={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/MyReactProject/Assets/Images/woman-calculating-bills.jpg')}
             width={width + 5}
             height={height + 5}
             preserveAspectRatio="xMidYMid slice"
           />
         </Svg>
         <View style={styles.container}>
-          <Animated.View>
+          <View>
             <Text style={styles.buttonText}>LOG IN</Text>
-          </Animated.View>
+          </View>
         </View>
-      </Animated.View>
+      </View>
       <Text style={styles.buttonText}>LOG IN</Text>
-      <Animated.View></Animated.View>
-    </Animated.View>
+    </View>
   );
 };
 
