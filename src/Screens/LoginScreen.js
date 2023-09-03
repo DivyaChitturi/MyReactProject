@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -8,10 +9,21 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import {kApiSignup, kApiLogin} from '../Config/Constants';
+import {userActions} from '../Features/userSlice';
 
-export default Login = () => {
+const {request, clear} = userActions;
+
+const LoginScreen = () => {
+  const [userName, setUserName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  // const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clear());
+  }, []);
 
   const showAlert = viewId => {
     Alert.alert('Alert', 'Button pressed ' + viewId);
@@ -26,12 +38,30 @@ export default Login = () => {
         }}
       />
       <View style={styles.inputContainer}>
+        {/* <TextInput
+        value={userName}
+        onChangeText={changedText => {
+          setUserName(changedText);
+        }}
+        placeholder="Enter UserName"
+        style={styles.inputs}
+      /> */}
         <TextInput
           style={styles.inputs}
+          placeholder="userName"
+          value={userName}
+          underlineColorAndroid="transparent"
+          onChangeText={text => setUserName(text)}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputs}
+          value={email}
           placeholder="Email"
           keyboardType="email-address"
           underlineColorAndroid="transparent"
-          onChangeText={email => setEmail({email})}
+          onChangeText={text => setEmail(text)}
         />
         <Image
           style={styles.inputIcon}
@@ -42,10 +72,11 @@ export default Login = () => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.inputs}
+          value={password}
           placeholder="Password"
           secureTextEntry={true}
           underlineColorAndroid="transparent"
-          onChangeText={password => setPassword({password})}
+          onChangeText={text => setPassword(text)}
         />
         <Image
           style={styles.inputIcon}
@@ -61,13 +92,21 @@ export default Login = () => {
 
       <TouchableOpacity
         style={[styles.buttonContainer, styles.loginButton]}
-        onPress={() => showAlert('login')}>
+        onPress={() =>
+          dispatch(request({url: kApiLogin, data: {email, password}}))
+        }>
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => showAlert('Sign up')}>
+        onPress={
+          () =>
+            dispatch(
+              request({url: kApiSignup, data: {userName, email, password}}),
+            )
+          //</View>showAlert('Sign up')
+        }>
         <Text style={styles.btnText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
@@ -162,3 +201,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default LoginScreen;

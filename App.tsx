@@ -24,7 +24,10 @@ import {useNavigationContainerRef} from '@react-navigation/native';
 const Stack = createNativeStackNavigator();
 
 const Nav = () => {
-  const isULoggedIn = useSelector(state => state.Auth.isLoggedIn);
+  //const isULoggedIn = useSelector(state => state.Auth.isLoggedIn);
+
+  const userData = useSelector(state => state.user);
+  const isULoggedIn = typeof userData?.data?.id === 'string' ? true : false;
 
   // const user = useSelector(state => state.user);
   // const isULoggedIn =
