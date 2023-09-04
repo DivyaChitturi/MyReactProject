@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import {kApiSignup, kApiLogin} from '../Config/Constants';
 import {userActions} from '../Features/userSlice';
+import auth from '@react-native-firebase/auth';
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 
 const {request, clear} = userActions;
 
@@ -20,6 +22,33 @@ const LoginScreen = () => {
   const [password, setPassword] = useState();
   // const user = useSelector(state => state.user);
   const dispatch = useDispatch();
+
+  async function onFacebookButtonPress() {
+    // Attempt login with permissions
+    const result = await LoginManager.logInWithPermissions([
+      'public_profile',
+      'email',
+    ]);
+
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
+
+    // Once signed in, get the users AccessToken
+    const data = await AccessToken.getCurrentAccessToken();
+
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
+
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(
+      data.accessToken,
+    );
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(facebookCredential);
+  }
 
   useEffect(() => {
     dispatch(clear());
@@ -108,6 +137,33 @@ const LoginScreen = () => {
           //</View>showAlert('Sign up')
         }>
         <Text style={styles.btnText}>Sign Up</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.buttonContainer, styles.fabookButton]}
+        onPress={() =>
+          onFacebookButtonPress().then(() =>
+            console.log('Signed in with Facebook!'),
+          )
+        }>
+        <View style={styles.socialButtonContent}>
+          <Image
+            style={styles.icon}
+            source={{
+              uri: 'https://img.icons8.com/color/70/000000/facebook.png',
+            }}
+          />
+          <Text style={styles.loginText}>Continue with facebook</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[styles.buttonContainer, styles.googleButton]}>
+        <View style={styles.socialButtonContent}>
+          <Image
+            style={styles.icon}
+            source={{uri: 'https://img.icons8.com/color/70/000000/youtube.png'}}
+          />
+          <Text style={styles.loginText}>Sign in with google</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -199,6 +255,26 @@ const styles = StyleSheet.create({
   btnText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  restoreButtonContainer: {
+    width: 250,
+    marginBottom: 15,
+    alignItems: 'flex-end',
+  },
+  socialButtonContent: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  socialIcon: {
+    color: '#FFFFFF',
+    marginRight: 5,
+  },
+  fabookButton: {
+    backgroundColor: '#3b5998',
+  },
+  googleButton: {
+    backgroundColor: '#ff0000',
   },
 });
 
