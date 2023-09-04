@@ -8,7 +8,7 @@ import analytics from '@react-native-firebase/analytics';
 import React, {useEffect, useState} from 'react';
 import LoginScreen from './src/Screens/LoginScreen';
 import UserDetails from './src/Screens/UserDetails';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider} from 'react-redux';
 import store from './store';
@@ -18,6 +18,7 @@ import TestSaga from './src/Containers/TestSaga';
 import FireStoreScreen from './src/Screens/FireStoreScreen';
 import MapScreen from './src/Screens/MapScreen';
 import {useSelector} from 'react-redux';
+import NotificationHelper from './src/Helpers/NotificationHelper';
 
 import {useNavigationContainerRef} from '@react-navigation/native';
 
@@ -25,6 +26,7 @@ const Stack = createNativeStackNavigator();
 
 const Nav = () => {
   //const isULoggedIn = useSelector(state => state.Auth.isLoggedIn);
+  const navigation = useNavigation();
 
   const userData = useSelector(state => state.user);
   const isULoggedIn = typeof userData?.data?.id === 'string' ? true : false;
@@ -73,6 +75,29 @@ function App(): JSX.Element {
     analytics().logEvent('testrun', {
       name: 'Divya',
     });
+  });
+
+  useEffect(() => {
+    NotificationHelper.initializeFCM(
+      recievedMessage => {
+        if (recievedMessage.type === 'orderBooked') {
+          //call order api
+        }
+
+        if (recievedMessage.type === 'newemail') {
+          //call inbox api
+        }
+      },
+      tappedMessage => {
+        if (tappedMessage.type === 'news') {
+          //navigate to so n so views with data
+          // navigation.navigate('somescreenname');
+        }
+      },
+    );
+    NotificationHelper.checkFCMPermission();
+    NotificationHelper.getToken();
+    NotificationHelper.refreshToken();
   });
   const navigationRef = useNavigationContainerRef();
   return (

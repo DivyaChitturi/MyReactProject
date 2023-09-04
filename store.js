@@ -1,10 +1,5 @@
 import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import {createLogger} from 'redux-logger';
-import reducers from './src/Features/reducers';
-import {combineReducers} from '@reduxjs/toolkit';
-import persistReducer from 'redux-persist/es/persistReducer';
-import storage from 'redux-persist/lib/storage';
-import persistStore from 'redux-persist/lib/persistStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import sagas from './src/Sagas';
 import createSagaMiddleware from 'redux-saga';
@@ -16,7 +11,7 @@ import userSlice from './src/Features/userSlice';
 
 const isDebuggingInChrome = __DEV__ && !!window.navigator.userAgent;
 
-let persistConfig = {key: 'root', storage: AsyncStorage};
+//let persistConfig = {key: 'root', storage: AsyncStorage};
 // let rootReducer = combineReducers(reducers);
 // let persistedReducer = persistReducer(persistConfig, rootReducer);
 
