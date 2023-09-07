@@ -8,21 +8,49 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Button,
 } from 'react-native';
 import {kApiSignup, kApiLogin} from '../Config/Constants';
 import {userActions} from '../Features/userSlice';
 import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import notifee, {AndroidImportance} from '@notifee/react-native';
 
 const {request, clear} = userActions;
 
-const LoginScreen = () => {
+const LoginScreen = props => {
   const [userName, setUserName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   // const user = useSelector(state => state.user);
   const dispatch = useDispatch();
 
+  async function createNotification() {
+    try {
+      const channelId = 'custom_channel_id';
+
+      // Create a channel (if it doesn't exist)
+      await notifee.createChannel({
+        id: channelId,
+        name: 'Custom Channel',
+        vibration: true,
+      });
+
+      // Create a notification with the custom channel ID
+      const notification = {
+        title: 'My Custom Notification',
+        body: 'This notification uses a custom channel ID.',
+        android: {
+          channelId: channelId, // Assign the custom channel ID
+        },
+      };
+
+      // Display the notification
+      await notifee.displayNotification(notification);
+    } catch (error) {
+      console.error('Error creating notification:', error);
+    }
+  }
   async function onFacebookButtonPress() {
     // Attempt login with permissions
     const result = await LoginManager.logInWithPermissions([
@@ -67,14 +95,6 @@ const LoginScreen = () => {
         }}
       />
       <View style={styles.inputContainer}>
-        {/* <TextInput
-        value={userName}
-        onChangeText={changedText => {
-          setUserName(changedText);
-        }}
-        placeholder="Enter UserName"
-        style={styles.inputs}
-      /> */}
         <TextInput
           style={styles.inputs}
           placeholder="userName"
@@ -129,12 +149,10 @@ const LoginScreen = () => {
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={
-          () =>
-            dispatch(
-              request({url: kApiSignup, data: {userName, email, password}}),
-            )
-          //</View>showAlert('Sign up')
+        onPress={() =>
+          dispatch(
+            request({url: kApiSignup, data: {userName, email, password}}),
+          )
         }>
         <Text style={styles.btnText}>Sign Up</Text>
       </TouchableOpacity>
@@ -155,8 +173,29 @@ const LoginScreen = () => {
           <Text style={styles.loginText}>Continue with facebook</Text>
         </View>
       </TouchableOpacity>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Button
+          title="Create Notification"
+          onPress={() =>
+            createNotification().then(() => console.log('Notification Button!'))
+          }
+        />
+      </View>
 
-      <TouchableOpacity style={[styles.buttonContainer, styles.googleButton]}>
+      <TouchableOpacity
+        style={[styles.buttonContainer, styles.googleButton]}
+        onPress={() => {
+          //dispatch(request({url: kApiLogin, data: {email, password}}));
+          auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(userCredential => {
+              dispatch(signIn(true));
+            })
+            .catch(error => {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+            });
+        }}>
         <View style={styles.socialButtonContent}>
           <Image
             style={styles.icon}
@@ -194,7 +233,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   inputs: {

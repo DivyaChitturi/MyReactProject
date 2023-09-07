@@ -1300,6 +1300,11 @@ PODS:
     - FirebaseCoreExtension (= 10.14.0)
     - React-Core
     - RNFBApp
+  - RNNotifee (7.8.0):
+    - React-Core
+    - RNNotifee/NotifeeCore (= 7.8.0)
+  - RNNotifee/NotifeeCore (7.8.0):
+    - React-Core
   - RNPermissions (3.9.0):
     - React-Core
   - RNScreens (3.25.0):
@@ -1362,6 +1367,7 @@ DEPENDENCIES:
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -1501,6 +1507,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNNotifee:
+    :path: "../node_modules/@notifee/react-native"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNScreens:
@@ -1591,6 +1599,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 5db7274fc2d8701b1e9cc3fd76eba677f5260648
   RNFBFirestore: 8bbf230c05f1cfc41fb52ff33b64fc3547174e5f
   RNFBMessaging: 40f7d8b2dd76b888b38df6baf54898867caef5fe
+  RNNotifee: f3c01b391dd8e98e67f539f9a35a9cbcd3bae744
   RNPermissions: 2e68b2e82a93ad09327dee8822846fead91ca3ad
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
   RNSVG: ed492aaf3af9ca01bc945f7a149d76d62e73ec82

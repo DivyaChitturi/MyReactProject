@@ -121,6 +121,15 @@ const FireStoreScreen = props => {
           <Text style={styles.buttonText}>Map View</Text>
         </Pressable>
       </View>
+      <TouchableOpacity
+        style={[styles.formButton]}
+        onPress={() => {
+          props.navigation.navigate('UseMemoExample');
+        }}>
+        <View>
+          <Text style={styles.loginText}>UseMemo</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

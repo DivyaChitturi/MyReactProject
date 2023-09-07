@@ -41,7 +41,7 @@ class NotificationHelper {
     });
 
     messaging()
-      .subscribeToTopic('karachipeople')
+      .subscribeToTopic('ITCPeople')
       .then(() => {
         console.log('subscribed to topic');
       })

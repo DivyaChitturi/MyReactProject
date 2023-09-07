@@ -19,6 +19,7 @@ import FireStoreScreen from './src/Screens/FireStoreScreen';
 import MapScreen from './src/Screens/MapScreen';
 import {useSelector} from 'react-redux';
 import NotificationHelper from './src/Helpers/NotificationHelper';
+import UseMemoExample from './src/Screens/UseMemoExample';
 
 import {useNavigationContainerRef} from '@react-navigation/native';
 
@@ -52,6 +53,7 @@ const Nav = () => {
         <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="TestSaga" component={TestSaga} />
         <Stack.Screen name="UserDetails" component={UserDetails} />
+        <Stack.Screen name="UseMemoExample" component={UseMemoExample} />
         <Stack.Screen
           name="ListScreen"
           component={ListScreen}
