@@ -92,10 +92,14 @@ const LoginScreen = props => {
     <View style={styles.container}>
       <Image
         style={styles.bgImage}
+        source={require('/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/MyReactProject/Assets/Images/HomeImage.jpeg')}
+      />
+      {/* <Image
+        style={styles.bgImage}
         source={{
           uri: '/Users/itc-consultant/Documents/GitHub/ReactNative_Projects/MyReactProject/Assets/Images/HomeImage.jpeg',
         }}
-      />
+      /> */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.inputs}

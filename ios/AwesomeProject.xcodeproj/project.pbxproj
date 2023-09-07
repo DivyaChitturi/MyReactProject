@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		CD28B4652AAA233800CCB23E /* RCTCalendarModule.m in Sources */ = {isa = PBXBuildFile; fileRef = CD28B4642AAA233800CCB23E /* RCTCalendarModule.m */; };
 		CD57852F2A96C6FE00036B40 /* splash_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CD57852E2A96C6FE00036B40 /* splash_logo.png */; };
 		CDB7795A2A94087B00AAD291 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CDB779592A94087B00AAD291 /* GoogleService-Info.plist */; };
 		D0F50BBBABBA3E4C413E13A7 /* Pods_AwesomeProject_AwesomeProjectTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343800623F695A45C460A45 /* Pods_AwesomeProject_AwesomeProjectTests.framework */; };
@@ -46,6 +47,8 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-AwesomeProject-AwesomeProjectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeProject-AwesomeProjectTests.release.xcconfig"; path = "Target Support Files/Pods-AwesomeProject-AwesomeProjectTests/Pods-AwesomeProject-AwesomeProjectTests.release.xcconfig"; sourceTree = "<group>"; };
 		C343800623F695A45C460A45 /* Pods_AwesomeProject_AwesomeProjectTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AwesomeProject_AwesomeProjectTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD0E2CFB2AA53276005D15C3 /* AwesomeProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AwesomeProject.entitlements; path = AwesomeProject/AwesomeProject.entitlements; sourceTree = "<group>"; };
+		CD28B4632AAA233800CCB23E /* RCTCalendarModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTCalendarModule.h; path = AwesomeProject/RCTCalendarModule.h; sourceTree = "<group>"; };
+		CD28B4642AAA233800CCB23E /* RCTCalendarModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RCTCalendarModule.m; path = AwesomeProject/RCTCalendarModule.m; sourceTree = "<group>"; };
 		CD57852E2A96C6FE00036B40 /* splash_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_logo.png; sourceTree = "<group>"; };
 		CDB779592A94087B00AAD291 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "AwesomeProject/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -100,6 +103,8 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				CD57852E2A96C6FE00036B40 /* splash_logo.png */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				CD28B4632AAA233800CCB23E /* RCTCalendarModule.h */,
+				CD28B4642AAA233800CCB23E /* RCTCalendarModule.m */,
 			);
 			name = AwesomeProject;
 			sourceTree = "<group>";
@@ -436,6 +441,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD28B4652AAA233800CCB23E /* RCTCalendarModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
