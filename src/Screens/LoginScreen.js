@@ -9,6 +9,7 @@ import {
   Image,
   Alert,
   Button,
+  NativeModules,
 } from 'react-native';
 import {kApiSignup, kApiLogin} from '../Config/Constants';
 import {userActions} from '../Features/userSlice';
@@ -24,6 +25,7 @@ const LoginScreen = props => {
   const [password, setPassword] = useState();
   // const user = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const {CalendarModule} = NativeModules;
 
   async function createNotification() {
     try {
@@ -176,9 +178,44 @@ const LoginScreen = props => {
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Button
           title="Create Notification"
-          onPress={() =>
-            createNotification().then(() => console.log('Notification Button!'))
-          }
+          onPress={() => {
+            try {
+              notifee.requestPermission();
+              const channelId = 'notifee_channel_id';
+
+              // Create a channel (if it doesn't exist)
+              notifee.createChannel({
+                id: channelId,
+                name: 'Divya',
+                vibration: true,
+              });
+
+              // Create a notification with the custom channel ID
+              const notification = {
+                title: 'Divy Notification',
+                body: 'This notification uses a Divya channel ID.',
+                android: {
+                  channelId: channelId, // Assign the custom channel ID
+                },
+              };
+
+              // Display the notification
+              notifee.displayNotification(notification);
+            } catch (error) {
+              console.error('Error creating notification:', error);
+            }
+          }}
+        />
+      </View>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Button
+          title="Create Calender Event"
+          onPress={() => {
+            CalendarModule.createCalendarEvent(
+              'lets see the CalenderEvent!!',
+              'UK',
+            );
+          }}
         />
       </View>
 
@@ -204,6 +241,12 @@ const LoginScreen = props => {
           <Text style={styles.loginText}>Sign in with google</Text>
         </View>
       </TouchableOpacity>
+      {/* <TouchableOpacity
+        onPress={() => {
+          CalendarModule.createCalendarEvent('CalenderNativeModule', 'UK');
+        }}>
+        <Text>test native</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };
