@@ -1,6 +1,9 @@
 #import "AppDelegate.h"
 #import <Firebase.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import <AuthenticationServices/AuthenticationServices.h>
+#import <SafariServices/SafariServices.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
 
 #import <React/RCTBundleURLProvider.h>
 
@@ -8,6 +11,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  //Firebase Facebook
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                       didFinishLaunchingWithOptions:launchOptions];
+
   [GMSServices provideAPIKey:@"AIzaSyB4uOPrlEUJjx-tCcPm7BY5fn1gLwtB4BA"];
   [FIRApp configure];
   self.moduleName = @"AwesomeProject";

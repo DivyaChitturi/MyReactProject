@@ -8,16 +8,16 @@ import {
   Pressable,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  interpolate,
-  withTiming,
-  withDelay,
-  runOnJS,
-  withSequence,
-  withSpring,
-} from 'react-native-reanimated';
+// import Animated, {
+//   useSharedValue,
+//   useAnimatedStyle,
+//   interpolate,
+//   withTiming,
+//   withDelay,
+//   runOnJS,
+//   withSequence,
+//   withSpring,
+// } from 'react-native-reanimated';
 
 import styles from '../../styles';
 
@@ -113,14 +113,23 @@ const FireStoreScreen = props => {
           Submit
         </Text>
       </TouchableOpacity>
-      <Animated.View style={[styles.formButton]}>
+      <View style={[styles.formButton]}>
         <Pressable
           onPress={() => {
             props.navigation.navigate('MapScreen');
           }}>
           <Text style={styles.buttonText}>Map View</Text>
         </Pressable>
-      </Animated.View>
+      </View>
+      <TouchableOpacity
+        style={[styles.formButton]}
+        onPress={() => {
+          props.navigation.navigate('UseMemoExample');
+        }}>
+        <View>
+          <Text style={styles.loginText}>UseMemo</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
