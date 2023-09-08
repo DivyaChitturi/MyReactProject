@@ -87,5 +87,8 @@
         <string>fbapi</string>
         <string>fb-messenger-share-api</string>
     </array>
+	<!-- Include this only if you are planning to use the microphone for video recording -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Your message to user when the microsphone is accessed for the first time</string>
 </dict>
 </plist>

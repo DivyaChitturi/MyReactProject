@@ -20,6 +20,7 @@ import MapScreen from './src/Screens/MapScreen';
 import {useSelector} from 'react-redux';
 import NotificationHelper from './src/Helpers/NotificationHelper';
 import UseMemoExample from './src/Screens/UseMemoExample';
+import QRScan from './src/Screens/QRScan';
 
 import {useNavigationContainerRef} from '@react-navigation/native';
 
@@ -42,7 +43,8 @@ const Nav = () => {
   const authStack = () => {
     return (
       <Stack.Group>
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
+        <Stack.Screen name="QRScan" component={QRScan} />
       </Stack.Group>
     );
   };
